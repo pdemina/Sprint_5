@@ -1,17 +1,27 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
-import data
+from data import Data
+from .locators import Locators
+from .helper_functions import Helper_Functions
+from faker import Faker
 
 
-def test_registration_page(driver):
-    driver.get(data.page_login_url)
-    driver.find_element(By.XPATH, './/button[text()="Зарегистрироваться"]')
+class TestRegistration:
+
+    def test_registration_page(self, driver):
+        fake = Faker()
+        driver.get(Locators.page_login_url)
+        driver.find_element(By.XPATH, Locators.page_login_registration_link).click()
+        driver.find_element(By.XPATH, Locators.page_registration_register_button).click()
+        WebDriverWait(driver, 3) \
+            .until(expected_conditions
+                   .visibility_of_element_located((By.XPATH, Locators.page_registration_enter_button)))
+       # driver.find_element(Locators.page_registration_name_field).send_keys("Fyz")
+       # driver.find_element(Locators.page_registration_email_field).send_keys(fake.email())
+       # driver.find_element(Locators.page_registration_email_field).send_keys(fake.password())
+        assert driver.current_url == Locators.page_registration_url
 
 
-    WebDriverWait(driver, 3) \
-        .until(expected_conditions
-               .visibility_of_element_located((By.LINK_TEXT, "Регистрация")))
-    assert driver.current_url == "https://stellarburgers.nomoreparties.site/register"
 
 
